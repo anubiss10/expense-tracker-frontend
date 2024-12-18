@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+
 const apiClient = axios.create({
-  baseURL: 'https://expense-tracker-backend-production-dba5.up.railway.app/api/', 
+  baseURL: process.env.REACT_APP_API_URL,
 });
 
 export const setAuthToken = (token) => {
