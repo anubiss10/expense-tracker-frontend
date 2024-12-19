@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { login } from '../services/authService';
-import { setAuthToken } from '../services/apiClient';
-import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'; // Importa los estilos
+import '../styles/Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const { login: setUser } = useContext(AuthContext); // Contexto de autenticación
+  const [error, setError] = useState(''); // Estado para manejar errores
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,16 +15,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await login(formData);
-      const token = response.access;
-
-      setAuthToken(token); // Guarda el token en Axios
-      setUser(token); // Actualiza el contexto de usuario
-
-      localStorage.setItem('token', token); // Guarda en localStorage
+      await login(formData);
       console.log('Login exitoso');
       navigate('/dashboard'); // Redirige al Dashboard
     } catch (error) {
+      setError(
+        error.response?.data?.detail || 'Error al iniciar sesión. Por favor, intenta de nuevo.'
+      );
       console.error('Error al iniciar sesión:', error.response?.data || error.message);
     }
   };
@@ -56,6 +51,7 @@ const Login = () => {
         <button type="submit" className="login-btn">
           Log in ➡️
         </button>
+        {error && <p className="error-message">{error}</p>} {/* Mostrar errores */}
       </form>
     </div>
   );

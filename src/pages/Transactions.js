@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { getTransactions } from '../services/transactionService';
+import { fetchTransactions } from '../services/transactionService'; // Asegúrate de que esta ruta es correcta
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState([]);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchData = async () => {
       try {
-        const data = await getTransactions();
+        const data = await fetchTransactions(); // Usa `fetchTransactions` aquí
         setTransactions(data);
       } catch (error) {
         console.error('Error al obtener transacciones:', error);
       }
     };
 
-    fetchTransactions();
+    fetchData(); // Llama a la función `fetchData`
   }, []);
 
   return (
